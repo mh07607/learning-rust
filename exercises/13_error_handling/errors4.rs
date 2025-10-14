@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 #[derive(PartialEq, Debug)]
 enum CreationError {
     Negative,
@@ -11,10 +13,10 @@ impl PositiveNonzeroInteger {
     fn new(value: i64) -> Result<Self, CreationError> {
         // TODO: This function shouldn't always return an `Ok`.
         // Read the tests below to clarify what should be returned.
-        match value {
-            v if v < 0 => Err(CreationError::Negative),
-            0 => Err(CreationError::Zero),
-            v => Ok(PositiveNonzeroInteger(v as u64)),
+        match value.cmp(&0) {
+            Ordering::Greater => Ok(PositiveNonzeroInteger(value as u64)),
+            Ordering::Equal => Err(CreationError::Zero),
+            Ordering::Less => Err(CreationError::Negative),
         }
     }
 }
